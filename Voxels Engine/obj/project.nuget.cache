@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "dgSpecHash": "ObmFhPiPA4I=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\mathe\\RiderProjects\\Voxels Engine\\Voxels Engine\\Voxels Engine.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.win32.systemevents\\9.0.1\\microsoft.win32.systemevents.9.0.1.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\opentk\\5.0.0-pre.13\\opentk.5.0.0-pre.13.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\opentk.audio.openal\\5.0.0-pre.13\\opentk.audio.openal.5.0.0-pre.13.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\opentk.compute\\5.0.0-pre.13\\opentk.compute.5.0.0-pre.13.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\opentk.core\\5.0.0-pre.13\\opentk.core.5.0.0-pre.13.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\opentk.graphics\\5.0.0-pre.13\\opentk.graphics.5.0.0-pre.13.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\opentk.input\\5.0.0-pre.13\\opentk.input.5.0.0-pre.13.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\opentk.mathematics\\5.0.0-pre.13\\opentk.mathematics.5.0.0-pre.13.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\opentk.platform\\5.0.0-pre.13\\opentk.platform.5.0.0-pre.13.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\opentk.redist.glfw\\3.3.8.39\\opentk.redist.glfw.3.3.8.39.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\opentk.windowing.common\\5.0.0-pre.13\\opentk.windowing.common.5.0.0-pre.13.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\opentk.windowing.desktop\\5.0.0-pre.13\\opentk.windowing.desktop.5.0.0-pre.13.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\opentk.windowing.graphicslibraryframework\\5.0.0-pre.13\\opentk.windowing.graphicslibraryframework.5.0.0-pre.13.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\system.drawing.common\\9.0.1\\system.drawing.common.9.0.1.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

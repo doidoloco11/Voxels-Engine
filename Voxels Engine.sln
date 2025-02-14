@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voxels Engine", "Voxels Engine\Voxels Engine.csproj", "{4705AFAC-3BE0-44B8-94F6-95CE99F28E7D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4705AFAC-3BE0-44B8-94F6-95CE99F28E7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4705AFAC-3BE0-44B8-94F6-95CE99F28E7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4705AFAC-3BE0-44B8-94F6-95CE99F28E7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4705AFAC-3BE0-44B8-94F6-95CE99F28E7D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

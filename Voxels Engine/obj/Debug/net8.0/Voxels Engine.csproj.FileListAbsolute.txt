@@ -1,0 +1,36 @@
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\Voxels Engine.exe
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\Voxels Engine.deps.json
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\Voxels Engine.runtimeconfig.json
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\Voxels Engine.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\Voxels Engine.pdb
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\obj\Debug\net8.0\Voxels Engine.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\obj\Debug\net8.0\Voxels Engine.AssemblyInfoInputs.cache
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\obj\Debug\net8.0\Voxels Engine.AssemblyInfo.cs
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\obj\Debug\net8.0\Voxels Engine.csproj.CoreCompileInputs.cache
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\obj\Debug\net8.0\Voxels Engine.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\obj\Debug\net8.0\refint\Voxels Engine.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\obj\Debug\net8.0\Voxels Engine.pdb
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\obj\Debug\net8.0\Voxels Engine.genruntimeconfig.cache
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\obj\Debug\net8.0\ref\Voxels Engine.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\OpenTK.Audio.OpenAL.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\OpenTK.Compute.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\OpenTK.Core.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\OpenTK.Graphics.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\OpenTK.Input.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\OpenTK.Mathematics.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\OpenTK.Platform.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\OpenTK.Windowing.Common.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\OpenTK.Windowing.Desktop.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\OpenTK.Windowing.GraphicsLibraryFramework.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\runtimes\linux-x64\native\libglfw-wayland.so.3.3
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\runtimes\linux-x64\native\libglfw.so.3.3
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\runtimes\osx-arm64\native\libglfw.3.dylib
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\runtimes\osx-x64\native\libglfw.3.dylib
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\runtimes\win-x64\native\glfw3.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\runtimes\win-x86\native\glfw3.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\obj\Debug\net8.0\Voxels Engine.csproj.AssemblyReference.cache
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\obj\Debug\net8.0\Voxels E.72BACA99.Up2Date
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\System.Drawing.Common.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\System.Private.Windows.Core.dll
+C:\Users\mathe\RiderProjects\Voxels Engine\Voxels Engine\bin\Debug\net8.0\runtimes\win\lib\net8.0\Microsoft.Win32.SystemEvents.dll
