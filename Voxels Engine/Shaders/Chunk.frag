@@ -7,8 +7,8 @@ in vec3 position;
 in flat uint blockId;
 in flat uint faceId;
 
-const float ambient = 0.2;
-const float diffuse = 0.5;
+const float ambient = 0.4;
+const float diffuse = 0.6;
 
 uniform sampler2DArray main_texture;
 uniform sampler2DArray normalmap_texture;
@@ -43,8 +43,8 @@ vec3 TriplanarNormal(){
 
 void main() {
     vec3 light_dir = normalize(vec3(1, -1, 1));
-    vec3 n = TriplanarNormal();
+    //vec3 n = TriplanarNormal();
     float diffuse_light = max(dot(-light_dir, normal), 0) * diffuse;
-    frag_color = TriplanarTexture() * (ambient);
+    frag_color = TriplanarTexture() * (ambient + diffuse_light);
     //frag_color = vec4(1)  * (ambient + diffuse_light);
 }
