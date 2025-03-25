@@ -11,10 +11,10 @@ public class Window : GameWindow
 {
     public static Window window;
     private World world;
-    private Camera camera;
-
-    private TextureArray texture;
-    public Window() : base(GameWindowSettings.Default, NativeWindowSettings.Default)
+    private PostProcessing _postProcessing;
+    
+    public Camera camera;
+    public Window(NativeWindowSettings nws) : base(GameWindowSettings.Default, nws)
     {
         
     }
@@ -31,13 +31,13 @@ public class Window : GameWindow
         GL.DepthFunc(DepthFunction.Less);
         GL.CullFace(TriangleFace.Back);
         GL.FrontFace(FrontFaceDirection.Ccw);
+        
+        camera = new Camera(new Vector3(0, 0, 0));
 
+        _postProcessing = new PostProcessing();
+        
         world = new World();
         world.CreateChunks(Vector3.Zero);
-
-        texture = new TextureArray("../../../textureimage.png", 3, 4);
-
-        camera = new Camera(new Vector3(8, 9, 0));
     }
 
     protected override void OnUpdateFrame(FrameEventArgs args)
@@ -47,18 +47,24 @@ public class Window : GameWindow
         Title = (1 / UpdateTime).ToString();
         
         camera.update();
+        
+        world.CreateChunks(Commons.Round(camera.Position/Chunk.CHUNKSIZE));
     }
 
     protected override void OnRenderFrame(FrameEventArgs args)
     {
         base.OnRenderFrame(args);
         
+        _postProcessing.ActiveFrameBuffer();
+        
         GL.ClearColor(0.3f, 0.3f, 0.8f, 1);
         GL.Clear(ClearBufferMask.ColorBufferBit);
         GL.Clear(ClearBufferMask.DepthBufferBit);
         
-        texture.use("main_texture", ShaderManager.ChunkShader, TextureUnit.Texture0, 0);
-        world.render();
+        world.Render();
+        _postProcessing.DisableFrameBuffer();
+        
+        _postProcessing.Render();
         
         SwapBuffers();
     }
@@ -68,12 +74,13 @@ public class Window : GameWindow
         base.OnResize(e);
         
         GL.Viewport(0, 0, Size.X, Size.Y);
+        _postProcessing.ResizeTextures(Size);
     }
 
     protected override void OnClosing(CancelEventArgs e)
     {
         base.OnClosing(e);
         
-        world.Remove();
+        world.Dispose();
     }
 }

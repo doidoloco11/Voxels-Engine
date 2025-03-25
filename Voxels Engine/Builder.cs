@@ -5,8 +5,8 @@ namespace Voxels_Engine;
 public class Builder
 {
     public static float s = (float)Math.Sqrt(2);
-    public static void BuildBlockFace(Vector3 position, Vector3 dir, ref List<Vector3> vertices,
-        ref List<int> triangles, int sizex, int sizey, int sizez)
+    public static void BuildBlockFace(Vector3 position, int lod, Vector3 dir, ref List<Vector3> vertices,
+        ref List<int> triangles)
     {
         
         Vector3 axisA = new Vector3(dir.Y, dir.Z, dir.X);
@@ -43,17 +43,11 @@ public class Builder
             for (int y = 0; y < 2; y++)
             {
                 Vector2 percent = new Vector2(x, y) - new Vector2(0.5f, 0.5f);
-                
-                Vector3 point = (percent.X * axisA + percent.Y * axisB + dir/2);
-                //Console.WriteLine(point.X);
-                point.X += 0.5f;
-                point.X *= sizex;
 
-                point.Z += 0.5f;
-                point.Z *= sizez;
-
-                point.Y += 0.5f;
-                point.Y *= sizey;
+                Vector3 point = (percent.X * axisA + percent.Y * axisB + dir / 2);
+                point += new Vector3(0.5f);
+                point *= float.Pow(2, lod);
+                //Console.WriteLine(point);
                 
                 vertices.Add(point + position);
             }

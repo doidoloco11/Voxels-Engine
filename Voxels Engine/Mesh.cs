@@ -1,3 +1,4 @@
+using OpenTK.Audio.OpenAL;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -14,39 +15,27 @@ public class ChunkMesh
     private PrimitiveType type = PrimitiveType.Triangles;
 
     private int Vao;
-    private int VerticesBuffer;
-    private int NormalBuffer;
-    private int BlockIdBuffer;
-    private int FaceIdBuffer;
+    private int ChunkBuffer;
 
     public bool Ready = false;
 
     public ChunkMesh()
     {
-        VerticesBuffer = GL.GenBuffer();
+        ChunkBuffer = GL.GenBuffer();
         Vao = GL.GenVertexArray();
-        NormalBuffer = GL.GenBuffer();
-        BlockIdBuffer = GL.GenBuffer();
-        FaceIdBuffer = GL.GenBuffer();
+        
 
         Triangles = new int[0];
     }
 
-    Vector3[] OrganizeVertices()
+    public void Dispose()
     {
-        Vector3[] v = new Vector3[Triangles.Length];
-
-        for (int i = 0; i < Triangles.Length; i++)
-        {
-            v[i] = Vertices[Triangles[i]];
-        }
-
-        return v;
+        GL.BindBuffer(BufferTarget.ArrayBuffer,0);
     }
 
-    Vector3[] OrganizeNormals()
+    uint[] packData()
     {
-        Vector3[] v = new Vector3[Triangles.Length];
+        Vector3[] nn = new Vector3[Triangles.Length];
 
         for (int i = 0; i < Triangles.Length; i+=3)
         {
@@ -59,59 +48,61 @@ public class ChunkMesh
 
             Vector3 normal = Vector3.Cross(edgeA, edgeB).Normalized();
 
-            v[i] = normal;
-            v[i + 1] = normal;
-            v[i + 2] = normal;
+            nn[i] = normal + new Vector3(1);
+            nn[i + 1] = normal + new Vector3(1);
+            nn[i + 2] = normal + new Vector3(1);
         }
+        
+        uint[] packedData = new uint[Triangles.Length];
 
-        return v;
-    }
-
-    float[] OrganizeBlockIds()
-    {
-        float[] v = new float[Triangles.Length];
+        uint mask = 0b11111;
+        uint mask2 = 0b11;
+        uint mask3 = 0b11111111;
+        uint mask4 = 0b111;
+        
+        //Console.WriteLine($"{mask}, {mask2}, {mask3}");
 
         for (int i = 0; i < Triangles.Length; i++)
         {
-            v[i] = BlockIds[Triangles[i]];
+            uint data = 0;
+
+            Vector3i v = (Vector3i)Vertices[Triangles[i]];
+            Vector3i n = (Vector3i)nn[i];
+            uint blockid = (uint)BlockIds[Triangles[i]];
+            uint faceid = (uint)FaceIds[Triangles[i]];
+            //Console.WriteLine($"V: {v}, N: {n}");
+            
+            data |= (uint)n.X << 0;
+            data |= (uint)n.Y << 2;
+            data |= (uint)n.Z << 4;
+            data |= (uint)v.X << 6;
+            data |= (uint)v.Y << 11;
+            data |= (uint)v.Z << 16;
+            data |= blockid << 21;
+            data |= faceid << 29;
+            
+            //Console.WriteLine($"{(data>>29)&mask2} {faceid}, {(data>>21)&mask3} {blockid}");
+            //Console.WriteLine($"pos: {v}, {(data >> 6)&mask}, {(data >> 11)&mask}, {(data >> 16)&mask}, norm: {n-new Vector3i(1)}, {(int)((data>>0)&mask2)-1}, {(int)((data>>2)&mask2)-1}, {(int)((data>>4)&mask2)-1}");
+            //Console.WriteLine(data);
+
+            packedData[i] = data;
         }
 
-        return v;
-    }
-    
-    float[] OrganizeFaceIds()
-    {
-        float[] v = new float[Triangles.Length];
-
-        for (int i = 0; i < Triangles.Length; i++)
-        {
-            v[i] = FaceIds[Triangles[i]];
-        }
-
-        return v;
+        return packedData;
     }
 
     public void DefineBuffers()
     {
         GL.BindVertexArray(Vao);
-        GL.BindBuffer(BufferTarget.ArrayBuffer, VerticesBuffer);
-        Vector3[] OVertices = OrganizeVertices();
-        GL.BufferData(BufferTarget.ArrayBuffer, OVertices.Length * sizeof(float) * 3, OVertices, BufferUsage.DynamicDraw);
-        Vector3[] ONormal = OrganizeNormals();
-        GL.BindBuffer(BufferTarget.ArrayBuffer, NormalBuffer);
-        GL.BufferData(BufferTarget.ArrayBuffer, ONormal.Length * sizeof(float) * 3, ONormal, BufferUsage.DynamicDraw);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, ChunkBuffer);
+        uint[] packedData = packData();
+        GL.BufferData(BufferTarget.ArrayBuffer, packedData.Length * sizeof(uint), packedData, BufferUsageHint.StaticDraw);
         
-        float[] OBlockIds = OrganizeBlockIds();
-        GL.BindBuffer(BufferTarget.ArrayBuffer, BlockIdBuffer);
-        GL.BufferData(BufferTarget.ArrayBuffer, OBlockIds.Length * sizeof(float), OBlockIds, BufferUsage.DynamicDraw);
-        float[] OFaceIds = OrganizeFaceIds();
-        GL.BindBuffer(BufferTarget.ArrayBuffer, FaceIdBuffer);
-        GL.BufferData(BufferTarget.ArrayBuffer, OFaceIds.Length * sizeof(float), OFaceIds, BufferUsage.DynamicDraw);
-
+        
         Ready = true;
     }
 
-    public void render()
+    public void Render()
     {
 
         if (Window.window.KeyboardState.IsKeyPressed(Keys.F2))
@@ -119,25 +110,92 @@ public class ChunkMesh
             type = type == PrimitiveType.Triangles ? PrimitiveType.Lines : PrimitiveType.Triangles;
         }
         
-        ShaderManager.ChunkShader.Use();
+        GL.BindVertexArray(Vao);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, ChunkBuffer);
+        GL.EnableVertexAttribArray(0);
+        GL.VertexAttribIPointer(0, 1, VertexAttribIntegerType.UnsignedInt, 0, 0);
+        
+        GL.DrawArrays(type, 0, Triangles.Length);
+    }
+}
+
+public class UIMesh
+{
+    private int Vao;
+    private int VerticesBuffer;
+    private int UvsBuffer;
+
+    public UIMesh()
+    {
+        Vao = GL.GenVertexArray();
+        VerticesBuffer = GL.GenBuffer();
+        UvsBuffer = GL.GenBuffer();
         
         GL.BindVertexArray(Vao);
         GL.BindBuffer(BufferTarget.ArrayBuffer, VerticesBuffer);
+        GL.BufferData(BufferTarget.ArrayBuffer, 4 * 8, new []
+        {
+            new Vector2(-1, -1),
+            new Vector2(-1, 1),
+            new Vector2(1, -1),
+            new Vector2(1, 1)
+        }, BufferUsageHint.StaticDraw);
+        
+        GL.BindBuffer(BufferTarget.ArrayBuffer, UvsBuffer);
+        GL.BufferData(BufferTarget.ArrayBuffer, 4 * 8, new[]
+        {
+            new Vector2(0, 0),
+            new Vector2(0, 1),
+            new Vector2(1, 0),
+            new Vector2(1, 1)
+        }, BufferUsageHint.StaticDraw);
+    }
+
+    public void Render(Shader shader, Vector2 position, Vector2 size, float rotation = 0)
+    {
+        GL.Disable(EnableCap.DepthTest);
+        GL.Disable(EnableCap.CullFace);
+        
+        Matrix4 m_model = Matrix4.Identity;
+        m_model *= Matrix4.CreateScale(new Vector3(size));
+        m_model *= Matrix4.CreateRotationZ(rotation);
+        m_model *= Matrix4.CreateTranslation(new Vector3(position));
+        
+        GL.UniformMatrix4(shader.GetUniformId("m_model"), false, ref m_model);
+        
+        GL.BindVertexArray(Vao);
+        
+        GL.BindBuffer(BufferTarget.ArrayBuffer, VerticesBuffer);
         GL.EnableVertexAttribArray(0);
-        GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
+        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 0, 0);
         
-        GL.BindBuffer(BufferTarget.ArrayBuffer, NormalBuffer);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, UvsBuffer);
         GL.EnableVertexAttribArray(1);
-        GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 0, 0);
+        GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 0, 0);
         
-        GL.BindBuffer(BufferTarget.ArrayBuffer, BlockIdBuffer);
-        GL.EnableVertexAttribArray(2);
-        GL.VertexAttribPointer(2, 1, VertexAttribPointerType.Float, false, 0, 0);
+        GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 4);
         
-        GL.BindBuffer(BufferTarget.ArrayBuffer, FaceIdBuffer);
-        GL.EnableVertexAttribArray(3);
-        GL.VertexAttribPointer(3, 1, VertexAttribPointerType.Float, false, 0, 0);
+        GL.Enable(EnableCap.DepthTest);
+        GL.Enable(EnableCap.CullFace);
+    }
+    public void Render()
+    {
+        GL.Disable(EnableCap.DepthTest);
+        GL.Disable(EnableCap.CullFace);
         
-        GL.DrawArrays(type, 0, Triangles.Length);
+        GL.BindVertexArray(Vao);
+        
+        GL.BindBuffer(BufferTarget.ArrayBuffer, VerticesBuffer);
+        GL.EnableVertexAttribArray(0);
+        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 0, 0);
+        
+        GL.BindBuffer(BufferTarget.ArrayBuffer, UvsBuffer);
+        GL.EnableVertexAttribArray(1);
+        GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 0, 0);
+        
+        GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 4);
+        
+        GL.Enable(EnableCap.DepthTest);
+        GL.Enable(EnableCap.CullFace);
     }
 }

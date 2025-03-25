@@ -8,7 +8,10 @@ namespace Voxels_Engine;
 public class Camera
 {
     public static float sensibility = 0.01f;
-    public static float Speed = 5;
+    public static float Speed = 15;
+
+    public delegate void RayCastBreak(Vector3 origin, Vector3 direction, float maxLength);
+    public event RayCastBreak OnRayCastBreak;
     
     public Vector3 Position;
     public Vector3 Angle;
@@ -16,6 +19,9 @@ public class Camera
     public Vector3 Forward;
     public Vector3 Right;
     public Vector3 Up;
+
+    public float factor_y;
+    public float factor_x;
 
     public CursorState cursorState;
 
@@ -27,6 +33,10 @@ public class Camera
         Forward = new Vector3(0, 0, 1);
         Right = new Vector3(1, 0, 0);
         Up = new Vector3(0, 1, 0);
+        
+        factor_y = -float.Sin(30);
+        Console.WriteLine(factor_y);
+        factor_x = 1;
 
         cursorState = CursorState.Normal;
     }
@@ -40,12 +50,45 @@ public class Camera
         return vector;
     }
 
+    public bool IsOnFrustum(Chunk chunk)
+    {
+        Vector3 dir = chunk.Center - Position;
+
+        float l = Vector3.Dot(dir, Forward);
+
+        if (l + Chunk.SphereRadius < 0.1f || l - Chunk.SphereRadius > 1000)
+        {
+            return false;
+        }
+        
+        float ly = Vector3.Dot(dir, Up);
+        float lx = Vector3.Dot(dir, Right);
+
+        float size = factor_y * l;
+
+        if (ly + Chunk.SphereRadius * 2 < -size || ly - Chunk.SphereRadius * 2 > size)
+        {
+            return false;
+        }
+
+        size = factor_x * l;
+
+        if (lx + Chunk.SphereRadius * 5 < -size || lx - Chunk.SphereRadius * 5 > size)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+
     public void update()
     {
 
         Forward = rotate(new Vector3(0, 0, 1));
         Right = rotate(new Vector3(-1, 0, 0));
         Up = rotate(new Vector3(0, 1, 0));
+        
+        factor_x = float.Cos(30 * ((float)Window.window.Size.X / Window.window.Size.Y));
 
         MouseState mouseState = Window.window.MouseState;
         KeyboardState keyboardState = Window.window.KeyboardState;
@@ -93,6 +136,11 @@ public class Camera
             cursorState = cursorState == CursorState.Normal ? CursorState.Grabbed : CursorState.Normal;
         }
 
+        if (mouseState.IsButtonPressed(MouseButton.Button1))
+        {
+            OnRayCastBreak(Position - new Vector3(0.5f, 0.5f, 0), Forward, 5);
+        }
+
         if (keyboardState.IsKeyPressed(Keys.Escape)) Window.window.Close();
         
         ShaderManager.ChunkShader.Use();
@@ -100,10 +148,10 @@ public class Camera
         Matrix4 m_proj = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 3,
             (float)Window.window.Size.X / Window.window.Size.Y, 0.1f, 1000);
         
-        GL.UniformMatrix4f(ShaderManager.ChunkShader.GetUniformId("m_proj"), 1, false, ref m_proj);
+        GL.UniformMatrix4(ShaderManager.ChunkShader.GetUniformId("m_proj"), false, ref m_proj);
 
         Matrix4 m_look = Matrix4.LookAt(Position, Position + Forward, Up);
         
-        GL.UniformMatrix4f(ShaderManager.ChunkShader.GetUniformId("m_look"), 1, false, ref m_look);
+        GL.UniformMatrix4(ShaderManager.ChunkShader.GetUniformId("m_look"), false, ref m_look);
     }
 }

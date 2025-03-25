@@ -5,6 +5,7 @@ namespace Voxels_Engine;
 public class ShaderManager
 {
     public static Shader ChunkShader = new Shader("../../../Shaders/Chunk");
+    public static Shader PostProcessingShader = new Shader("../../../Shaders/PostProcessing");
 }
 
 public struct Shader
