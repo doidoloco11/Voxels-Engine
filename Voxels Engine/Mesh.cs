@@ -96,6 +96,7 @@ public class ChunkMesh
         GL.BindVertexArray(Vao);
         GL.BindBuffer(BufferTarget.ArrayBuffer, ChunkBuffer);
         uint[] packedData = packData();
+        Console.WriteLine(sizeof(uint) * packedData.Length / 1024);
         GL.BufferData(BufferTarget.ArrayBuffer, packedData.Length * sizeof(uint), packedData, BufferUsageHint.StaticDraw);
         
         
@@ -104,18 +105,20 @@ public class ChunkMesh
 
     public void Render()
     {
-
-        if (Window.window.KeyboardState.IsKeyPressed(Keys.F2))
+        if (Triangles.Length > 0)
         {
-            type = type == PrimitiveType.Triangles ? PrimitiveType.Lines : PrimitiveType.Triangles;
+            if (Window.window.KeyboardState.IsKeyPressed(Keys.F2))
+            {
+                type = type == PrimitiveType.Triangles ? PrimitiveType.Lines : PrimitiveType.Triangles;
+            }
+
+            GL.BindVertexArray(Vao);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, ChunkBuffer);
+            GL.EnableVertexAttribArray(0);
+            GL.VertexAttribIPointer(0, 1, VertexAttribIntegerType.UnsignedInt, 0, 0);
+
+            GL.DrawArrays(type, 0, Triangles.Length);
         }
-        
-        GL.BindVertexArray(Vao);
-        GL.BindBuffer(BufferTarget.ArrayBuffer, ChunkBuffer);
-        GL.EnableVertexAttribArray(0);
-        GL.VertexAttribIPointer(0, 1, VertexAttribIntegerType.UnsignedInt, 0, 0);
-        
-        GL.DrawArrays(type, 0, Triangles.Length);
     }
 }
 

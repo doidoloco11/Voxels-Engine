@@ -65,8 +65,9 @@ public class Camera
         float lx = Vector3.Dot(dir, Right);
 
         float size = factor_y * l;
+        
 
-        if (ly + Chunk.SphereRadius * 2 < -size || ly - Chunk.SphereRadius * 2 > size)
+        if (ly + Chunk.SphereRadius * 4 < -size || ly - Chunk.SphereRadius * 4 > size)
         {
             return false;
         }

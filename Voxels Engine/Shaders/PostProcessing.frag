@@ -5,8 +5,10 @@ out vec4 fragColor;
 uniform sampler2D ScreenTex;
 uniform sampler2D DepthTex;
 
-const int halfKernelSize = 1;
-float stepSize = 0.03;
+uniform int KernelSize;
+uniform vec2 Kernel[128];
+
+const float stepSize = 0.03;
 
 in vec2 uv;
 
@@ -37,22 +39,20 @@ void main() {
     
     vec2 coord = gl_FragCoord.xy;
     
-    for (int i = -halfKernelSize; i <= halfKernelSize; i++){
-        for (int j = -halfKernelSize; j <= halfKernelSize; j++){
-            vec2 pos = uv + (vec2(i, j) + noise(coord)) * stepSize;
-            if (pos.x > 1 || pos.x < 0 || pos.y > 1|| pos.y < 0){
-                x++;
-                continue;
-            }
-            float d = texture(DepthTex, pos).r;
-            d = linearEyeDepth(d);
-            if (depth > d + 0.025){
-                float range = smoothstep(0, 1, 0.5/abs(depth - d));
-                ao += 1 * range;
-            }
+    for (int i = 0; i < KernelSize; i++){
+        vec2 pos = uv + (Kernel[i] + noise(coord)) * stepSize;
+        if (pos.x > 1 || pos.x < 0 || pos.y > 1|| pos.y < 0){
+            x++;
+            continue;
+        }
+        float d = texture(DepthTex, pos).r;
+        d = linearEyeDepth(d);
+        if (d < depth - 0.025){
+            float range = smoothstep(0, 1, 0.5/abs(depth - d));
+            ao += 1 * range;
         }
     }
-    ao = 1 - ((ao + x) / ((halfKernelSize * 2 + 1) * (halfKernelSize * 2 + 1)));
+    ao = 1 - ((ao + x) / max(KernelSize, 1));
     ao = max(min(ao, 1), 0);
     vec4 col = texture(ScreenTex, uv);
     float fogDensity = pow(exp(-depth), 0.03);

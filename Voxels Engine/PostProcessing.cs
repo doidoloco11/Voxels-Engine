@@ -12,6 +12,8 @@ public class PostProcessing
     private int ScreenTexture;
     private int DepthTexture;
 
+    private float[] Kernel;
+
     public PostProcessing()
     {
         _mesh = new UIMesh();
@@ -40,6 +42,50 @@ public class PostProcessing
         GL.FramebufferTexture(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, DepthTexture, 0);
         
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+        
+        UpdateKernel(9);
+    }
+
+    public void UpdateKernel(int pointCount)
+    {
+        List<float> points = new List<float>();
+
+        Random r = new Random();
+
+        for (int i = 0; i < pointCount; i++)
+        {
+            Vector2 point = new Vector2(r.NextSingle() * 2 - 1, r.NextSingle() * 2 - 1);
+            
+            points.Add(point.X);
+            points.Add(point.Y);
+        }
+
+        Vector2 AveragePos = new Vector2(0);
+
+        for (int i = 0; i < pointCount * 2; i += 2)
+        {
+            AveragePos.X += points[i];
+            AveragePos.Y += points[i + 1];
+        }
+
+        AveragePos /= pointCount;
+
+        for (int i = 0; i < pointCount * 2; i += 2)
+        {
+            Vector2 xy = new Vector2(points[i], points[i + 1]);
+            xy -= AveragePos;
+            xy = Vector2.ComponentMax(xy, -Vector2.One);
+            xy = Vector2.ComponentMin(xy, Vector2.One);
+            points[i] = xy.X;
+            points[i + 1] = xy.Y;
+        }
+
+        Kernel = points.ToArray();
+
+        for (int i = 0; i < pointCount * 2; i += 2)
+        {
+            Console.WriteLine($"{Kernel[i]}, {Kernel[i + 1]}");
+        }
     }
 
     public void ActiveFrameBuffer()
@@ -64,7 +110,11 @@ public class PostProcessing
         GL.ActiveTexture(TextureUnit.Texture1);
         GL.BindTexture(TextureTarget.Texture2D, DepthTexture);
         
+        
         GL.Uniform1(ShaderManager.PostProcessingShader.GetUniformId("DepthTex"), 1);
+        
+        GL.Uniform1(ShaderManager.PostProcessingShader.GetUniformId("KernelSize"), Kernel.Length / 2);
+        GL.Uniform2(ShaderManager.PostProcessingShader.GetUniformId("Kernel"), Kernel.Length / 2, Kernel);
         
         _mesh.Render();
     }

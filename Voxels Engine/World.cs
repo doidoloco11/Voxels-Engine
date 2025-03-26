@@ -25,7 +25,6 @@ public class World
     public bool IsRunning = false;
 
     private int texture;
-    private int normalstexture;
 
     public World()
     {
@@ -42,7 +41,6 @@ public class World
         IsRunning = true;
 
         texture = Texture.GenerateTextureArray("../../../textureimage.png", 3, 4);
-        normalstexture = Texture.GenerateTextureArray("../../../normalmaps.png", 3, 4);
 
         GenChunkThread = new Task(() => GenerateChunks());
         DelChunksThread = new Task(() => DeleteChunks());
@@ -99,8 +97,8 @@ public class World
                             tt.Start();
                             chunks[CreateInChunks[0]].GenerateVertices();
                             tt.Stop();
-                            Console.WriteLine(
-                                $"{t.ElapsedMilliseconds / 1000f}, {tt.ElapsedMilliseconds / 1000f}");
+                            //Console.WriteLine(
+                            //    $"{t.ElapsedMilliseconds / 1000f}, {tt.ElapsedMilliseconds / 1000f}");
                         }
                     }
                     
@@ -122,7 +120,6 @@ public class World
         GL.Uniform1(ShaderManager.ChunkShader.GetUniformId("main_texture"), 0);
         
         GL.ActiveTexture(TextureUnit.Texture1);
-        GL.BindTexture(TextureTarget.Texture2DArray, normalstexture);
             
         GL.Uniform1(ShaderManager.ChunkShader.GetUniformId("normalmap_texture"), 1);
         foreach (var chunk in chunks)
